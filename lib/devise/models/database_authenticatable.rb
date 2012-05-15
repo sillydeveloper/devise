@@ -54,13 +54,14 @@ module Devise
       # error on :current_password. It also automatically rejects :password and
       # :password_confirmation if they are blank.
       def update_with_password(params, *options)
+                
         current_password = params.delete(:current_password)
 
         if params[:password].blank?
           params.delete(:password)
           params.delete(:password_confirmation) if params[:password_confirmation].blank?
         end
-
+        
         result = if valid_password?(current_password)
           update_attributes(params, *options)
         else
@@ -70,6 +71,14 @@ module Devise
           false
         end
 
+        clean_up_passwords
+        result
+      end
+      
+      def update_no_current_password(params, *options)
+        result= update_with_password(params, *options)
+        result= update_attributes(params, *options) if !result
+      
         clean_up_passwords
         result
       end

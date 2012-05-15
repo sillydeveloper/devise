@@ -92,6 +92,11 @@ class DatabaseAuthenticatableTest < ActiveSupport::TestCase
       :password => 'pass321', :password_confirmation => 'pass321')
     assert user.reload.valid_password?('pass321')
   end
+  
+  test 'should update password without current password' do 
+    user = create_user
+    assert user.update_no_current_password(:password => 'pass321', :password_confirmation => 'pass321')
+  end
 
   test 'should update password with valid current password and :as option' do
     user = create_user
